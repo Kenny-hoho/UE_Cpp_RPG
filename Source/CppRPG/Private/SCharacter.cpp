@@ -44,13 +44,18 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// Basic Movement
 	PlayerInputComponent->BindAxis("MoveForward", this, &ASCharacter::MoveForward);
-
 	PlayerInputComponent->BindAxis("MoveRight", this, &ASCharacter::MoveRight);
 
+	// Camera Movement
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+
+	// Jump
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+
+	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 }
 
 
@@ -71,4 +76,15 @@ void ASCharacter::MoveRight(float Value)
 
 	FVector RightVec = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::Y);
 	AddMovementInput(RightVec, Value);
+}
+
+void ASCharacter::PrimaryAttack()
+{
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation);
+
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; // 无论在生成的地方是否产生碰撞都生成
+
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParams);
 }
