@@ -18,6 +18,8 @@ public:
 	// Sets default values for this actor's properties
 	ASExplosiveBarrel();
 
+	void Fire();
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)

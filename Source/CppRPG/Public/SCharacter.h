@@ -9,14 +9,12 @@
 class USpringArmComponent;
 class UCameraComponent;
 class USInteractionComponent;
+struct FTimerHandle;
 
 UCLASS()
 class CPPRPG_API ASCharacter : public ACharacter
 {
 	GENERATED_BODY()
-protected:
-	UPROPERTY(EditAnywhere);
-	TSubclassOf<AActor> ProjectileClass;
 
 public:
 	// Sets default values for this character's properties
@@ -33,6 +31,14 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	USInteractionComponent* InteractionComp;
 
+	UPROPERTY(EditAnywhere, Category="Attack")
+	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnim;
+
+	FTimerHandle TimerHandle_PrimaryAttack;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -41,6 +47,8 @@ protected:
 	void MoveRight(float Value);
 
 	void PrimaryAttack();
+
+	void PrimaryAttack_TimerDelay();
 
 	void PrimaryInteract();
 

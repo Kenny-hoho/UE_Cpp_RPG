@@ -92,12 +92,24 @@ void ASCharacter::MoveRight(float Value)
 
 void ASCharacter::PrimaryAttack()
 {
+	// 播放攻击动画蒙太奇
+	PlayAnimMontage(AttackAnim);
+
+	// 设置Timer，延迟生成projectile
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::PrimaryAttack_TimerDelay, 0.2f);
+}
+
+void ASCharacter::PrimaryAttack_TimerDelay()
+{
+	// 从手中发射子弹
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 	FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation);
 
+	// 设置生成规则
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; // 无论在生成的地方是否产生碰撞都生成
 
+	// 生成
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParams);
 }
 

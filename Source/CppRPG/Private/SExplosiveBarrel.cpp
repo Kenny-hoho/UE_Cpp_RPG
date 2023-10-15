@@ -30,6 +30,11 @@ void ASExplosiveBarrel::PostInitializeComponents()
 
 void ASExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	Fire();
+}
+
+void ASExplosiveBarrel::Fire()
+{
 	RadialForceComp->FireImpulse();
 }
 
