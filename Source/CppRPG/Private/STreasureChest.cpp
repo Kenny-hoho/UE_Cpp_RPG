@@ -16,6 +16,9 @@ ASTreasureChest::ASTreasureChest()
 	ChestLid = CreateDefaultSubobject<UStaticMeshComponent>("ChestLid");
 	ChestLid->SetupAttachment(ChestBottom);
 
+	GoldMesh = CreateDefaultSubobject<UStaticMeshComponent>("GoldMesh");
+	GoldMesh->SetupAttachment(ChestBottom);
+
 	TargetPitch = 110;
 }
 

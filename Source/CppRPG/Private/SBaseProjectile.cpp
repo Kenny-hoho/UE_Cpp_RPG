@@ -1,63 +1,60 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "SMagicProjectile.h"
+#include "SBaseProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "SCharacter.h"
 
 // Sets default values
-ASMagicProjectile::ASMagicProjectile()
+ASBaseProjectile::ASBaseProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	ProjectileMoveSpeed = 500.0f;
+
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
-	SphereComp->SetCollisionProfileName("Projectile");
 	RootComponent = SphereComp;
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(SphereComp);
 
-	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComp");
-	//MovementComp->InitialSpeed = 1000.0f;
-	MovementComp->bRotationFollowsVelocity = true;
-	MovementComp->bInitialVelocityInLocalSpace = true;
+	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComp");
 	MovementComp->ProjectileGravityScale = 0.0f;
 
-	ProjectileMoveSpeed = 1000.0f;
 }
 
-
-void ASMagicProjectile::PostInitializeComponents()
+void ASBaseProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	// 设置向玩家瞄准处发射
-	FVector InitialVelocity = FVector(0, 0, 0);
+	FVector ProjectileVelocity = FVector(0, 0, 0);
 
-	APawn* SpawnPawn = GetInstigator();
-	ASCharacter* SpawnPlayer = Cast<ASCharacter>(SpawnPawn);
+	APawn* OwnerPawn = GetInstigator();
 
-	if (SpawnPlayer) {
-		InitialVelocity = (SpawnPlayer->AimTarget - GetActorLocation()).GetSafeNormal() * ProjectileMoveSpeed;
+	ASCharacter* OwnerChar = Cast<ASCharacter>(OwnerPawn);
+	if (OwnerChar) {
+		ProjectileVelocity = (OwnerChar->AimTarget - GetActorLocation()).GetSafeNormal() * ProjectileMoveSpeed;
 	}
 
-	MovementComp->Velocity = InitialVelocity;
+	MovementComp->Velocity = ProjectileVelocity;
 }
 
 // Called when the game starts or when spawned
-void ASMagicProjectile::BeginPlay()
+void ASBaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ASMagicProjectile::Tick(float DeltaTime)
+void ASBaseProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
+
+
 

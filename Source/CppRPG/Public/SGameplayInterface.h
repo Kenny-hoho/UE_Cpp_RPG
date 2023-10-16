@@ -24,5 +24,5 @@ class CPPRPG_API ISGameplayInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
-	void Interact(APawn* InstigatorPawn);
+	void Interact(APawn* InstigatorPawn);  // 暂时不了解为啥要传进去这个APawn类的参数
 };

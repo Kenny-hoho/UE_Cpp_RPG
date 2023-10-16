@@ -2,6 +2,7 @@
 
 
 #include "SCharacter.h"
+#include "KismetClasses.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
@@ -30,6 +31,8 @@ ASCharacter::ASCharacter()
 
 	// 设置交互组件
 	InteractionComp = CreateDefaultSubobject<USInteractionComponent>("InteractionComp");
+
+	AimTarget = FVector(0, 0, 0);
 }
 
 // Called when the game starts or when spawned
@@ -45,6 +48,24 @@ void ASCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	FCollisionObjectQueryParams CollisionQueryParams;
+	CollisionQueryParams.AddObjectTypesToQuery(ECC_WorldDynamic);
+	CollisionQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+
+	FHitResult Hit;
+	FVector Start = CameraComp->GetComponentLocation();
+	FVector End = Start + CameraComp->GetComponentRotation().Vector() * 10000.0f;
+
+	GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, CollisionQueryParams);
+	// DrawDebugLine(GetWorld(), Start + FVector(20, 0, 0), End, FColor::Red, false, 0.0f, 0, 0.5f);
+
+	if (Hit.bBlockingHit) {
+		AimTarget = Hit.ImpactPoint;
+		DrawDebugString(GetWorld(), AimTarget, TEXT("HIT"), 0, FColor::Red, 0.2f);
+	}
+	else {
+		AimTarget = End;
+	}
 }
 
 // Called to bind functionality to input
@@ -108,6 +129,7 @@ void ASCharacter::PrimaryAttack_TimerDelay()
 	// 设置生成规则
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; // 无论在生成的地方是否产生碰撞都生成
+	SpawnParams.Instigator = this;
 
 	// 生成
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParams);

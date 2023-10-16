@@ -4,43 +4,41 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SGameplayInterface.h"
-#include "STreasureChest.generated.h"
+#include "SBaseProjectile.generated.h"
 
-class UStaticMeshComponent;
+class UParticleSystemComponent;
+class UProjectileMovementComponent;
+class USphereComponent;
 
 UCLASS()
-class CPPRPG_API ASTreasureChest : public AActor, public ISGameplayInterface
+class CPPRPG_API ASBaseProjectile : public AActor
 {
 	GENERATED_BODY()
-
-public:
-
-	void Interact_Implementation(APawn* InstigatorPawn);
-
+	
 public:	
 	// Sets default values for this actor's properties
-	ASTreasureChest();
+	ASBaseProjectile();
 
 	UPROPERTY(EditAnywhere)
-	float TargetPitch;
+	float ProjectileMoveSpeed;
+
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* SphereComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UParticleSystemComponent* EffectComp;
+
+	UPROPERTY(VisibleAnywhere)
+	UProjectileMovementComponent* MovementComp;
 
 protected:
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ChestBottom;
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* ChestLid;
-
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* GoldMesh;
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void PostInitializeComponents() override;
 
 };

@@ -20,6 +20,8 @@ public:
 	// Sets default values for this character's properties
 	ASCharacter();
 
+	FVector AimTarget;
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)

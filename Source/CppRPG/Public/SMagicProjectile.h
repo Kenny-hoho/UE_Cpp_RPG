@@ -19,6 +19,9 @@ public:
 	// Sets default values for this actor's properties
 	ASMagicProjectile();
 
+	UPROPERTY(EditAnywhere)
+	float ProjectileMoveSpeed;
+
 protected:
 
 	UPROPERTY(VisibleAnywhere)
@@ -34,9 +37,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void PostInitializeComponents() override;
-
-	UFUNCTION()
-	void OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 public:	
 	// Called every frame
