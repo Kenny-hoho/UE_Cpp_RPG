@@ -19,16 +19,16 @@ public:
 	// Sets default values for this actor's properties
 	ASBaseProjectile();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Attribute of Base Projectile")
 	float ProjectileMoveSpeed;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Attribute of Base Projectile")
 	USphereComponent* SphereComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Attribute of Base Projectile")
 	UParticleSystemComponent* EffectComp;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Attribute of Base Projectile")
 	UProjectileMovementComponent* MovementComp;
 
 protected:

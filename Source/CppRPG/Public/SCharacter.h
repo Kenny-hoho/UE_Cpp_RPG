@@ -37,9 +37,17 @@ protected:
 	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> UltimateProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> TeleportClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnim;
 
 	FTimerHandle TimerHandle_PrimaryAttack;
+
+	FTimerHandle TimerHandle_UltimateAttack;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,6 +59,14 @@ protected:
 	void PrimaryAttack();
 
 	void PrimaryAttack_TimerDelay();
+
+	void UltimateAttack();
+
+	void UltimateAttack_TimerDelay();
+
+	void Teleport();
+
+	void Teleport_TimerDelay();
 
 	void PrimaryInteract();
 

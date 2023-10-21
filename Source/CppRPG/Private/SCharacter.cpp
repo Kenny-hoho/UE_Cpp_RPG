@@ -87,8 +87,14 @@ void ASCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	// Primary Attack
 	PlayerInputComponent->BindAction("PrimaryAttack", IE_Pressed, this, &ASCharacter::PrimaryAttack);
 
+	// Ultimate Attack
+	PlayerInputComponent->BindAction("UltimateAttack", IE_Pressed, this, &ASCharacter::UltimateAttack);
+
 	// Primary Interact
 	PlayerInputComponent->BindAction("PrimaryInteract", IE_Pressed, this, &ASCharacter::PrimaryInteract);
+
+	// Teleport
+	PlayerInputComponent->BindAction("Teleport", IE_Pressed, this, &ASCharacter::Teleport);
 }
 
 
@@ -133,6 +139,50 @@ void ASCharacter::PrimaryAttack_TimerDelay()
 
 	// 生成
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParams);
+}
+
+void ASCharacter::UltimateAttack()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_UltimateAttack, this, &ASCharacter::UltimateAttack_TimerDelay, 0.3f);
+}
+
+void ASCharacter::UltimateAttack_TimerDelay()
+{
+	// 从手中发射子弹
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation + FVector(0, 0, 150.0f));
+
+	// 设置生成规则
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; // 无论在生成的地方是否产生碰撞都生成
+	SpawnParams.Instigator = this;
+
+	// 生成
+	GetWorld()->SpawnActor<AActor>(UltimateProjectileClass, SpawnTransform, SpawnParams);
+}
+
+void ASCharacter::Teleport()
+{
+	PlayAnimMontage(AttackAnim);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_PrimaryAttack, this, &ASCharacter::Teleport_TimerDelay, 0.3f);
+}
+
+void ASCharacter::Teleport_TimerDelay()
+{
+	// 从手中发射子弹
+	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
+	FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation);
+
+	// 设置生成规则
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn; // 无论在生成的地方是否产生碰撞都生成
+	SpawnParams.Instigator = this;
+
+	// 生成
+	GetWorld()->SpawnActor<AActor>(TeleportClass, SpawnTransform, SpawnParams);
 }
 
 void ASCharacter::PrimaryInteract()

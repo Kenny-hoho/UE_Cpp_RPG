@@ -17,13 +17,13 @@ ASBaseProjectile::ASBaseProjectile()
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>("SphereComp");
 	RootComponent = SphereComp;
+	SphereComp->SetCollisionProfileName("Projectile");
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
 	EffectComp->SetupAttachment(SphereComp);
 
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovementComp");
 	MovementComp->ProjectileGravityScale = 0.0f;
-
 }
 
 void ASBaseProjectile::PostInitializeComponents()
@@ -34,6 +34,7 @@ void ASBaseProjectile::PostInitializeComponents()
 
 	APawn* OwnerPawn = GetInstigator();
 
+	// 向瞄准位置发射
 	ASCharacter* OwnerChar = Cast<ASCharacter>(OwnerPawn);
 	if (OwnerChar) {
 		ProjectileVelocity = (OwnerChar->AimTarget - GetActorLocation()).GetSafeNormal() * ProjectileMoveSpeed;
